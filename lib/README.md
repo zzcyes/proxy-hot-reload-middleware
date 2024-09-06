@@ -1,12 +1,15 @@
 # proxy-hot-reload-middleware
 
-通过监听配置文件的变化，来动态的更新代理的配置，从而达到热更新的效果。
+[简体中文](./README.cn.md)
 
-## 使用方式
+The proxy-hot-reload-middleware middleware allows for dynamic updates to proxy configurations by monitoring changes in the configuration file, achieving hot-reloading of proxy settings without restarting the server.
 
-- proxyConfig.js
+## Usage
 
+- Proxy Configuration Example
+  
 ```js
+// proxyConfig.js
 module.exports = [ 
     {
         context: '/api',
@@ -16,64 +19,33 @@ module.exports = [
 ]
 ```
 
-### 方式一  
+### Method 1: Using with webpack-dev-server
 
-直接在 webpack-dev-server 中使用，可以热更新项目 proxy 代理的请求路径。
+You can integrate this middleware into webpack-dev-server to enable hot-reloading of proxy configuration when running a React or other frontend project. This eliminates the need to restart the project when proxy settings change.
+
+
+- webpackDevServer.config.js
 
 ```js
 const proxyHotReloadMiddleware = require('proxy-hot-reload-middleware');
 
 module.exports = function (proxy, allowedHost){
     return {
+        // before (used for webpack-dev-server v3)
+        // for webpack-dev-server v4, use onBeforeSetupMiddleware
         before(app, server, compiler) {
-             app.use(proxyHotReloadMiddleware(proxyConfigPath)); // proxyConfig.js
-        }
+            app.use(proxyHotReloadMiddleware(proxyConfigPath)); // Use proxy configuration file path
+        },
     }
 }
 ```
 
+### Method 2: Using with Express
 
-- config/webpackDevServer.config.js
-
-```js
-const proxyHotReloadMiddleware = require('proxy-hot-reload-middleware');
-
-module.exports = function (proxy, allowedHost){
-    return {
-        // before webpack-dev-server V3
-        // v4 is onBeforeSetupMiddleware
-         before(app, server, compiler) {
-            if (fs.existsSync(paths.proxyConfig)) {
-                app.use(proxyHotReloadMiddleware(paths.proxyConfig));
-            }
-    },
-    }
-}
-```
-
-resolveApp('config/proxy-config.js') 为 config/proxy-config.js 的绝对路径
-
-- config/paths.js
-  
-```js
-const path = require('path');
-const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
-
-module.exports = {
-   proxyConfig: resolveApp('config/proxy-config.js'),
-}
-```
-
-## 使用效果
-
-使用 webpack-dev-server 来启 react 项目的时候，会遇到切换 proxy 代理的路径，但此时必须得重跑项目才会生效。
-
-使用该插件后，即使修改了 proxy 代理的路径，也不需要再重新跑项目了。
+You can also use proxy-hot-reload-middleware directly in an Express server. This allows the proxy settings to be hot-reloaded without restarting the server when changes are made to the proxy configuration.
 
 
-### 方式二  
-
-直接在 express 中使用
+- Example usage in Express
 
 ```js
 const express = require('express');
@@ -85,4 +57,24 @@ app.use(proxyHotReloadMiddleware(proxyConfigPath));
 app.listen(3000);
 ```
 
+## How It Works
 
+In certain development environments, such as when using webpack-dev-server for React projects, modifying the proxy configuration often requires restarting the development server for the changes to take effect. With proxy-hot-reload-middleware, the proxy settings are automatically reloaded whenever the configuration file is updated, so there is no need to restart the project manually.
+
+## Installation
+
+1. Install the package:
+
+```bash
+npm install proxy-hot-reload-middleware
+```
+
+1. Set up your proxy configuration file (e.g., proxyConfig.js).
+
+2. Use the middleware as shown in the examples above, either within a webpack-dev-server configuration or an Express server.
+
+By using this middleware, you can streamline the proxy configuration process and improve your development experience by avoiding unnecessary server restarts when working with proxy-based requests.
+
+## Publishing
+
+This package is published to the official npm registry. The `.npmrc` file in the project root ensures that `npm publish` will use the correct registry.

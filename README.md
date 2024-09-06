@@ -74,3 +74,7 @@ npm install proxy-hot-reload-middleware
 2. Use the middleware as shown in the examples above, either within a webpack-dev-server configuration or an Express server.
 
 By using this middleware, you can streamline the proxy configuration process and improve your development experience by avoiding unnecessary server restarts when working with proxy-based requests.
+
+## Publishing
+
+This package is published to the official npm registry. The `.npmrc` file in the project root ensures that `npm publish` will use the correct registry.

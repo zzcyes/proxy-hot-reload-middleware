@@ -3,12 +3,10 @@
   "version": "1.0.0",
   "description": "Express middleware for hot-reloading proxy configurations",
   "files": [
-    "*.js"
+    "lib"
   ],
   "scripts": {
     "build": "rollup -c",
-    "prepublishOnly": "pnpm run build",
-    "publish-lib": "pnpm run build && cd lib && pnpm publish",
     "test": "vitest"
   },
   "keywords": [
