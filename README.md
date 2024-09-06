@@ -1,75 +1,76 @@
 # proxy-hot-reload-middleware
 
-用于 webpack-dev-server 的 express 中间件，可以热更新项目 proxy 代理的请求路径。
+[简体中文](./README.cn.md)
 
-## 使用方法
+The proxy-hot-reload-middleware middleware allows for dynamic updates to proxy configurations by monitoring changes in the configuration file, achieving hot-reloading of proxy settings without restarting the server.
 
-- config/webpackDevServer.config.js
+## Usage
+
+- Proxy Configuration Example
+  
+```js
+// proxyConfig.js
+module.exports = [ 
+    {
+        context: '/api',
+        target: 'http://127.0.0.1:3000',
+        changeOrigin: true,
+    }
+]
+```
+
+### Method 1: Using with webpack-dev-server
+
+You can integrate this middleware into webpack-dev-server to enable hot-reloading of proxy configuration when running a React or other frontend project. This eliminates the need to restart the project when proxy settings change.
+
+
+- webpackDevServer.config.js
 
 ```js
 const proxyHotReloadMiddleware = require('proxy-hot-reload-middleware');
 
 module.exports = function (proxy, allowedHost){
     return {
-         before(app, server, compiler) {
-            if (fs.existsSync(paths.proxyConfig)) {
-                app.use(proxyHotReloadMiddleware(paths.proxyConfig));
-            }
-    },
+        // before (used for webpack-dev-server v3)
+        // for webpack-dev-server v4, use onBeforeSetupMiddleware
+        before(app, server, compiler) {
+            app.use(proxyHotReloadMiddleware(proxyConfigPath)); // Use proxy configuration file path
+        },
     }
 }
 ```
-resolveApp('config/proxy-config.js') 为 config/proxy-config.js 的绝对路径
 
-- config/paths.js
-  
-```js
-const path = require('path');
-const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
+### Method 2: Using with Express
 
-module.exports = {
-   proxyConfig: resolveApp('config/proxy-config.js'),
-}
-```
+You can also use proxy-hot-reload-middleware directly in an Express server. This allows the proxy settings to be hot-reloaded without restarting the server when changes are made to the proxy configuration.
 
-- config/proxy-config.js
+
+- Example usage in Express
 
 ```js
-    module.exports = [ 
-        {
-            context: '/api',
-            target: 'http://192.168.x.x:8902',
-            changeOrigin: true,
-        }
-    ]
+const express = require('express');
+const app = express();
+const proxyHotReloadMiddleware = require('proxy-hot-reload-middleware');
 
+app.use(proxyHotReloadMiddleware(proxyConfigPath));
+
+app.listen(3000);
 ```
 
-## 使用效果
+## How It Works
 
-使用 webpack-dev-server 来跑前端项目的时候，会遇到切换 proxy 代理的路径，但此时必须得重跑项目才会生效。
+In certain development environments, such as when using webpack-dev-server for React projects, modifying the proxy configuration often requires restarting the development server for the changes to take effect. With proxy-hot-reload-middleware, the proxy settings are automatically reloaded whenever the configuration file is updated, so there is no need to restart the project manually.
 
-使用该插件后，即使修改了 proxy 代理的路径，也不需要再重新跑项目了。
+## Installation
 
-PS: 在 webpack-dev-server 的 proxy 配置中，可以使用 http-proxy-middleware 中间件的 router，配合 hotRequire 加载 proxy.config 也能起到效果。
+1. Install the package:
 
-
-比如：
-
-```js
- proxy: {
-        '/api': {
-            target: 'http://192.168.x.x:8902',
-            changeOrigin: true,
-            router: () => {
-                //添加router配置
-                return hotRequire('./target').login;
-            },
-        },
- }
-
+```bash
+npm install proxy-hot-reload-middleware
 ```
 
- router 是 http-proxy-middleware 中间件提供的一个方法 ，可以重定向。但是修改后的 proxy 代理路径访问不通，终端还是会打印修改前的代理路径，不友好。
+1. Set up your proxy configuration file (e.g., proxyConfig.js).
 
-比如把代理端口切换为错误的端口 "8903", 此时终端会打印  <code>http://192.168.x.x:8902 </code> 代理访问错误的相关信息。
+2. Use the middleware as shown in the examples above, either within a webpack-dev-server configuration or an Express server.
+
+By using this middleware, you can streamline the proxy configuration process and improve your development experience by avoiding unnecessary server restarts when working with proxy-based requests.
