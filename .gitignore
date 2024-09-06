@@ -1,0 +1,14 @@
+node_modules
+
+.history
+
+.registry_temp
+
+*-lock.json
+
+.debug
+
+
+lib/*
+
+!lib/package.json

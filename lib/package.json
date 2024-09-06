@@ -1,0 +1,35 @@
+{
+    "name": "proxy-hot-reload-middleware",
+    "version": "1.0.0",
+    "description": "Express middleware for hot-reloading proxy configurations",
+    "main": "index.cjs.js",
+    "module": "index.esm.js",
+    "files": [
+        "index.cjs.js",
+        "index.esm.js",
+        "index.min.js"
+    ],
+    "author": "zzcyes",
+    "license": "MIT",
+    "dependencies": {
+        "http-proxy-middleware": "^2.0.0"
+    },
+    "peerDependencies": {
+        "express": "^4.0.0"
+    },
+    "keywords": [
+        "express",
+        "middleware",
+        "proxy",
+        "hot-reload",
+        "webpack-dev-server"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/zzcyes/proxy-hot-reload-middleware.git"
+    },
+    "bugs": {
+        "url": "https://github.com/zzcyes/proxy-hot-reload-middleware/issues"
+    },
+    "homepage": "https://github.com/zzcyes/proxy-hot-reload-middleware#readme"
+}
