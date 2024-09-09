@@ -1,5 +1,7 @@
 # proxy-hot-reload-middleware
 
+[English](./README.md) | 简体中文
+
 proxy-hot-reload-middleware 中间件允许通过监控配置文件的变化来动态更新代理配置，实现代理设置的热重载，无需重启服务器。
 
 ## 使用方法
