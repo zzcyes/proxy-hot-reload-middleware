@@ -1,6 +1,6 @@
 # proxy-hot-reload-middleware
 
-English | [简体中文](./README.zh-CN.md)
+English | [简体中文](./README.cn.md)
 
 The proxy-hot-reload-middleware middleware allows for dynamic updates to proxy configurations by monitoring changes in the configuration file, achieving hot-reloading of proxy settings without restarting the server.
 
